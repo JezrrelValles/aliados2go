@@ -2,11 +2,10 @@ import { View, Text, Pressable, Image } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../assets/img/small_logo.png";
 import { TextInput, Button, Divider } from "react-native-paper";
 import InfoCard from "../../components/ui/InfoCard";
 
-const Login = () => {
+const ClientsLogin = () => {
   const router = useRouter();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
@@ -15,12 +14,12 @@ const Login = () => {
     <SafeAreaView className="h-screen w-full items-center bg-background">
       <View className="w-[80%] grid grid-cols-1 items-center bg-background">
         <InfoCard
-          title="Proveedores"
-          subtitle="Inicia sesión para acceder a tus servicios y gestionar tus solicitudes."
+          title="Clientes"
+          subtitle="Inicia sesión para solicitar servicios y gestionar tus solicitudes."
         />
         <View className="w-full gap-4 pt-4">
           <TextInput
-            label="Correo electrónico o teléfono"
+            label="Teléfono"
             value={credential}
             onChangeText={(text) => setCredential(text)}
             mode="outlined"
@@ -45,7 +44,7 @@ const Login = () => {
           <Divider bold />
         </View>
         <Button
-          onPress={() => router.replace("(auth)/signup")}
+          onPress={() => router.replace("(auth)/clients_signup")}
           mode="elevated"
           buttonColor="#F5F5F5"
           className="mt-4 w-full"
@@ -59,4 +58,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ClientsLogin;

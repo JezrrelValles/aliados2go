@@ -3,8 +3,7 @@ import React from "react";
 import { Link } from "expo-router";
 import Logo from "../assets/img/small_logo.png";
 import { useRouter } from "expo-router";
-import { PaperProvider } from "react-native-paper";
-import { Card } from "react-native-paper";
+import { PaperProvider, Button } from "react-native-paper";
 
 const Home = () => {
   const router = useRouter();
@@ -23,22 +22,26 @@ const Home = () => {
           </Text>
         </View>
         <View className="grid grid-cols-1 gap-4 w-full">
-          <Pressable
-            className="bg-primary rounded-full p-4"
+          <Button
+          mode="elevated"
+          buttonColor="#0235ED"
+          textColor="#F5F5F5"
             onPress={() => router.replace("/login")}
           >
             <Text className="color-background text-center font-bold">
               Proveedores
             </Text>
-          </Pressable>
-          <Pressable
-            className="bg-background rounded-full border-foreground border-1 p-4"
-            onPress={() => router.replace("/login")}
+          </Button>
+          <Button
+          mode="elevated"
+          buttonColor="#F5F5F5"
+          textColor="#0235ED"
+            onPress={() => router.replace("/clients_login")}
           >
             <Text className="color-primary text-center font-bold">
               Clientes
             </Text>
-          </Pressable>
+          </Button>
         </View>
       </View>
     </SafeAreaView>

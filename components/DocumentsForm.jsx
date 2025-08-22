@@ -147,18 +147,32 @@ const DocumentsForm = ({ onNext }) => {
 
   const renderPreviewView = (uri) => (
     <View className="flex-1 items-center justify-center">
+      <View className="w-full h-full overflow-hidden rounded-2xl">
       <Image
         source={{ uri }}
-        style={{ width: "100%", height: "100%", borderRadius: 8 }}
-        resizeMode="contain"
+        style={{ width: "100%", height: "100%" }}
+        resizeMode="cover"
       />
-      <View className="absolute bottom-6 w-full flex-row justify-center">
-        <View style={{ marginRight: 12 }}>
-          <Button mode="elevated" textColor="#0235ED" buttonColor="#F5F5F5" onPress={retakePhoto} icon="camera-retake">
+      </View>
+      <View className="absolute bottom-4 w-full flex-row justify-center">
+        <View className="mr-4">
+          <Button
+            mode="elevated"
+            textColor="#0235ED"
+            buttonColor="#F5F5F5"
+            onPress={retakePhoto}
+            icon="camera-retake"
+          >
             Volver a tomar
           </Button>
         </View>
-        <Button mode="elevated" buttonColor="#0235ED" textColor="#F5F5F5" onPress={handleNextStep} icon="check">
+        <Button
+          mode="elevated"
+          buttonColor="#0235ED"
+          textColor="#F5F5F5"
+          onPress={handleNextStep}
+          icon="check"
+        >
           {step === "id" ? "Siguiente" : "Finalizar"}
         </Button>
       </View>
@@ -166,10 +180,14 @@ const DocumentsForm = ({ onNext }) => {
   );
 
   return (
-    <View className="flex-1 p-4 gap-4">
+    <View className="flex-1 gap-4">
       <InfoCard
-        title="Documentación Oficial"
-        subtitle="Toma una foto de tu identificación oficial y una selfie para comprobar tu identidad"
+        title="Verificación de identidad"
+        subtitle={
+          step === "id"
+            ? "Toma una foto de tu identificación oficial"
+            : "Toma una selfie para confirmar que eres tú"
+        }
       />
 
       <View className="flex-1">
@@ -185,10 +203,10 @@ const DocumentsForm = ({ onNext }) => {
       </View>
 
       {/* Thumbnails de previsualización */}
-      <View className="flex-row justify-between mt-2">
+      <View className="flex-row justify-between mb-4">
         {officialID && (
           <View>
-            <Text className="text-center mb-1">Identificación</Text>
+            <Text className="text-center">Identificación</Text>
             <Image
               source={{ uri: officialID }}
               style={{ width: 100, height: 100, borderRadius: 8 }}
@@ -197,7 +215,7 @@ const DocumentsForm = ({ onNext }) => {
         )}
         {selfie && (
           <View>
-            <Text className="text-center mb-1">Identidad</Text>
+            <Text className="text-center">Identidad</Text>
             <Image
               source={{ uri: selfie }}
               style={{ width: 100, height: 100, borderRadius: 8 }}
