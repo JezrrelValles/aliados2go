@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import { Card, IconButton, ProgressBar, Colors } from "react-native-paper";
+import { Card, IconButton, ProgressBar } from "react-native-paper";
 
 // Datos de ejemplo para el dashboard
 const dashboardData = {

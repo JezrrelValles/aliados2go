@@ -1,15 +1,37 @@
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Logo from "../../assets/img/small_logo.png";
 import { TextInput, Button, Divider } from "react-native-paper";
 import InfoCard from "../../components/ui/InfoCard";
+import { login } from "../../services/services";
 
 const Login = () => {
   const router = useRouter();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handLeLogin = async () => {
+    if (!credential || !password) {
+      Alert.alert("Por favor, ingresa tus credenciales");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const userCredential = await login(credential, password);
+      console.log("Login exitoso: ", userCredential.user);
+
+      router.replace("(dashboard)/home");
+    } catch (error) {
+      console.error("Error en login: ", error.message);
+      Alert.alert("Error: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="h-screen w-full items-center bg-background">
@@ -22,7 +44,7 @@ const Login = () => {
           <TextInput
             label="Correo electrónico o teléfono"
             value={credential}
-            onChangeText={(text) => setCredential(text)}
+            onChangeText={setCredential}
             mode="outlined"
             style={{ backgroundColor: "#F5F5F5" }}
             activeOutlineColor="#0235ED"
@@ -32,14 +54,14 @@ const Login = () => {
           <TextInput
             label="Contraseña"
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={setPassword}
             mode="outlined"
             activeOutlineColor="#0235ED"
             outlineColor="#0235ED"
             style={{ backgroundColor: "#F5F5F5" }}
             placeholder="Escribe aqui..."
           />
-          <Button mode="elevated" buttonColor="#2305ED" textColor="#F5F5F5">
+          <Button mode="elevated" buttonColor="#2305ED" textColor="#F5F5F5" onPress={handLeLogin} loading={loading}>
             <Text>Iniciar sesión</Text>
           </Button>
           <Divider bold />

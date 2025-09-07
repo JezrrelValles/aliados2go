@@ -1,14 +1,8 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Stack } from "expo-router";
-import React from "react";
 import "../global.css";
-import { Colors } from "../constants/Colors";
 import { PaperProvider } from "react-native-paper";
 
 const RootLayout = () => {
-  const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme] ?? Colors.light;
-
   return (
     <PaperProvider>
       <Stack>
@@ -40,5 +34,3 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-
-const styles = StyleSheet.create({});

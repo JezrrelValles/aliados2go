@@ -45,7 +45,7 @@ const SignUp = () => {
     console.log("Calendario: ", data);
     Alert.alert("Datos enviados: " + JSON.stringify(data));
     setStepFive(true);
-    router.push("(dashboard)/home")
+    router.replace("(dashboard)/home")
   }
 
   // Calcula el progreso

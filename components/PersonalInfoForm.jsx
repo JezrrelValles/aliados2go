@@ -5,10 +5,11 @@ import InfoCard from "./ui/InfoCard";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { Picker } from "@react-native-picker/picker";
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-const phoneRegex = /^\+?(52|1)\d{10}$/;
+const phoneRegex = /^\d{10}$/;
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("El nombre es obligatorio"),
@@ -17,7 +18,7 @@ const validationSchema = Yup.object().shape({
     .email("Correo inválido")
     .required("El correo es obligatorio"),
   phone: Yup.string()
-    .matches(phoneRegex, "Ingresa un teléfono válido con lada +52 o +1")
+    .matches(phoneRegex, "Ingresa un teléfono válido")
     .required("El teléfono es obligatorio"),
   password: Yup.string()
     .matches(
@@ -35,13 +36,14 @@ const PersonalInfoForm = ({ onNext }) => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
-  const maxLength = 13;
+  const maxLength = 10;
 
   return (
     <Formik
       initialValues={{
         firstName: "",
         lastName: "",
+        lada: "+52",
         phone: "",
         email: "",
         password: "",
@@ -49,7 +51,10 @@ const PersonalInfoForm = ({ onNext }) => {
         checked: false,
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => onNext(values)}
+      onSubmit={(values) => {
+        const fullPhone = `${values.lada}${values.phone}`;
+        onNext({ ...values, phone: fullPhone });
+      }}
     >
       {({
         handleChange,
@@ -99,24 +104,41 @@ const PersonalInfoForm = ({ onNext }) => {
               )}
             </View>
           </View>
-
-          <TextInput
-            label="Teléfono"
-            placeholder="Ingresa tu número de teléfono"
-            value={values.phone}
-            onChangeText={(text) => {
-              if (text.length <= maxLength) {
-                setFieldValue("phone", text);
-              }
-            }}
-            onBlur={handleBlur("phone")}
-            mode="outlined"
-            maxLength={maxLength}
-            keyboardType="phone-pad"
-            activeOutlineColor="#0235ED"
-            outlineColor="#0235ED"
-            style={{ backgroundColor: "#F5F5F5" }}
-          />
+          <View className="flex-row items-center gap-2">
+            <View className="w-28">
+              <Picker
+                selectedValue={values.lada}
+                onValueChange={(itemValue) => setFieldValue("lada", itemValue)}
+                style={{
+                  backgroundColor: "#F5F5F5",
+                  borderWidth: 1,
+                  borderColor: "#0235ED",
+                  borderRadius: 8,
+                }}
+              >
+                <Picker.Item label="+52" value="+52" />
+                <Picker.Item label="+1" value="+1" />
+              </Picker>
+            </View>
+            <View className="flex-1">
+              <TextInput
+                label="Teléfono"
+                placeholder="Número de teléfono"
+                value={values.phone}
+                onChangeText={(text) => {
+                  if (/^\d*$/.test(text) && text.length <= maxLength) {
+                    setFieldValue("phone", text);
+                  }
+                }}
+                onBlur={handleBlur("phone")}
+                mode="outlined"
+                keyboardType="phone-pad"
+                activeOutlineColor="#0235ED"
+                outlineColor="#0235ED"
+                style={{ backgroundColor: "#F5F5F5" }}
+              />
+            </View>
+          </View>
           {touched.phone && errors.phone && (
             <Text className="text-red-600">{errors.phone}</Text>
           )}

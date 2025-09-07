@@ -1,22 +1,21 @@
 import { Alert, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { TextInput, Button, Text, Checkbox } from "react-native-paper";
 import InfoCard from "./ui/InfoCard";
 import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Picker } from "@react-native-picker/picker"; // 👈 Importar Picker
+import { Picker } from "@react-native-picker/picker";
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-// Ahora la validación se hace con lada + número
 const phoneRegex = /^\d{10}$/;
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("El nombre es obligatorio"),
   lastName: Yup.string().required("El apellido es obligatorio"),
   phone: Yup.string()
-    .matches(phoneRegex, "Ingresa un teléfono válido con lada +52 o +1")
+    .matches(phoneRegex, "Ingresa un teléfono válido")
     .required("El teléfono es obligatorio"),
   password: Yup.string()
     .matches(
@@ -30,29 +29,48 @@ const validationSchema = Yup.object().shape({
   checked: Yup.bool().oneOf([true], "Debes aceptar las políticas"),
 });
 
-const ClientsForm = ({ onNext }) => {
+const ClientsForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
-  const maxLength = 10; // 👈 Solo números (sin lada)
+  const maxLength = 10;
+
+  // const handlePhoneVerification = async (values) => {
+  //   try {
+  //     const auth = getAuth();
+  //     const fullPhone = `${values.lada}${values.phone}`;
+  //     const confirmationResult = await signInWithPhoneNumber(
+  //       auth,
+  //       fullPhone,
+  //       recaptchaVerifier.current
+  //     );
+
+  //     router.replace({
+  //       pathname: "/verifyCode",
+  //       params: {
+  //         verificationId: confirmationResult.verificationId,
+  //         firstName: values.firstName,
+  //         lastName: values.lastName,
+  //         phone: fullPhone,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     Alert.alert("Error: " + error.message);
+  //   }
+  // };
 
   return (
     <Formik
       initialValues={{
         firstName: "",
         lastName: "",
-        lada: "+52", // 👈 Nuevo campo
+        lada: "+52",
         phone: "",
         password: "",
         confirmPassword: "",
         checked: false,
       }}
       validationSchema={validationSchema}
-      onSubmit={(values) => {
-        // concatenamos lada + telefono
-        const fullPhone = `${values.lada}${values.phone}`;
-        onNext({ ...values, phone: fullPhone });
-      }}
     >
       {({
         handleChange,
@@ -68,8 +86,6 @@ const ClientsForm = ({ onNext }) => {
             title="Información personal"
             subtitle="Completa todos los campos para continuar"
           />
-
-          {/* Nombre y Apellido */}
           <View className="flex-row gap-4 pt-2">
             <View className="flex-1">
               <TextInput
@@ -104,8 +120,6 @@ const ClientsForm = ({ onNext }) => {
               )}
             </View>
           </View>
-
-          {/* Teléfono con LADA */}
           <View className="flex-row items-center gap-2">
             <View className="w-28">
               <Picker
@@ -144,8 +158,6 @@ const ClientsForm = ({ onNext }) => {
           {touched.phone && errors.phone && (
             <Text className="text-red-600">{errors.phone}</Text>
           )}
-
-          {/* Contraseñas */}
           <View className="flex-row gap-4 pb-4">
             <View className="flex-1">
               <TextInput
@@ -198,7 +210,6 @@ const ClientsForm = ({ onNext }) => {
             </View>
           </View>
 
-          {/* Checkbox */}
           <View className="flex-row items-center gap-2 mb-4">
             <Checkbox
               status={values.checked ? "checked" : "unchecked"}
@@ -216,10 +227,9 @@ const ClientsForm = ({ onNext }) => {
             <Text className="text-red-600 mb-2">{errors.checked}</Text>
           )}
 
-          {/* Botones */}
           <Button
             mode="elevated"
-            onPress={() => router.push("/home")}
+            onPress={handleSubmit}
             buttonColor="#0235ED"
             textColor="#F5F5F5"
             className="mb-2"
